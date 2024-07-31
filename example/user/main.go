@@ -14,7 +14,7 @@ func main() {
 	user, err := userTransport.Get("3df03810-ff9e-4435-b9bd-e90dba645b71")
 	if err != nil {
 		if errors.As(err, &userSdk.ErrNotFound{}) {
-			log.Fatal("User not found: ", err.Error())
+			log.Fatal("user not found: ", err.Error())
 		}
 
 		log.Fatal(err)
