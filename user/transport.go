@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"fmt"
 	"net/url"
 	"time"
@@ -52,10 +53,10 @@ func (c *clientHTTP) Get(id string) (*domain.User, error) {
 
 	if !response.IsSuccess() {
 		if response.StatusCode() == 404 {
-			return nil, ErrNotFound{response.String()}
+			return nil, ErrNotFound{dataResponse.Message}
 		}
 
-		return nil, fmt.Errorf("Error: %s", response.String())
+		return nil, errors.New(dataResponse.Message)
 	}
 
 	return dataResponse.Data.(*domain.User), nil
