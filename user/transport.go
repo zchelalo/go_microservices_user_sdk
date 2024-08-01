@@ -42,20 +42,21 @@ func (c *clientHTTP) Get(id string) (*domain.User, error) {
 	dataResponse := DataResponse{
 		Data: &domain.User{},
 	}
+	errorResponse := DataResponse{}
 
 	u := url.URL{}
 	u.Path = fmt.Sprintf("/users/%s", id)
-	response, err := c.client.R().SetResult(&dataResponse).Get(u.String())
+	response, err := c.client.R().SetResult(&dataResponse).SetError(&errorResponse).Get(u.String())
 	if err != nil {
 		return nil, err
 	}
 
 	if !response.IsSuccess() {
 		if response.StatusCode() == 404 {
-			return nil, ErrNotFound{dataResponse.Message}
+			return nil, ErrNotFound{errorResponse.Message}
 		}
 
-		return nil, fmt.Errorf("%s", dataResponse.Message)
+		return nil, fmt.Errorf("%s", errorResponse.Message)
 	}
 
 	return dataResponse.Data.(*domain.User), nil
